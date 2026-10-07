@@ -148,6 +148,12 @@ export interface PatchedUserPreference {
      */
     comments?: boolean;
     /**
+     *
+     * @type {boolean}
+     * @memberof PatchedUserPreference
+     */
+    alwaysExpandComments?: boolean;
+    /**
      * 
      * @type {number}
      * @memberof PatchedUserPreference
@@ -277,6 +283,7 @@ export function PatchedUserPreferenceFromJSONTyped(json: any, ignoreDiscriminato
         'navSticky': json['nav_sticky'] == null ? undefined : json['nav_sticky'],
         'ingredientDecimals': json['ingredient_decimals'] == null ? undefined : json['ingredient_decimals'],
         'comments': json['comments'] == null ? undefined : json['comments'],
+        'alwaysExpandComments': json['always_expand_comments'] == null ? undefined : json['always_expand_comments'],
         'shoppingAutoSync': json['shopping_auto_sync'] == null ? undefined : json['shopping_auto_sync'],
         'mealplanAutoaddShopping': json['mealplan_autoadd_shopping'] == null ? undefined : json['mealplan_autoadd_shopping'],
         'foodInheritDefault': json['food_inherit_default'] == null ? undefined : FoodInheritFieldFromJSON(json['food_inherit_default']),
@@ -319,6 +326,7 @@ export function PatchedUserPreferenceToJSONTyped(value?: Omit<PatchedUserPrefere
         'nav_sticky': value['navSticky'],
         'ingredient_decimals': value['ingredientDecimals'],
         'comments': value['comments'],
+        'always_expand_comments': value['alwaysExpandComments'],
         'shopping_auto_sync': value['shoppingAutoSync'],
         'mealplan_autoadd_shopping': value['mealplanAutoaddShopping'],
         'default_delay': value['defaultDelay'],

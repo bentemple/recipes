@@ -579,7 +579,7 @@ class UserPreferenceSerializer(WritableNestedModelSerializer):
             'user', 'image', 'theme', 'nav_bg_color', 'nav_text_color', 'nav_show_logo', 'default_unit', 'default_page',
             'use_fractions', 'use_kj',
             'nav_sticky',
-            'ingredient_decimals', 'comments', 'shopping_auto_sync', 'mealplan_autoadd_shopping',
+            'ingredient_decimals', 'comments', 'always_expand_comments', 'shopping_auto_sync', 'mealplan_autoadd_shopping',
             'food_inherit_default', 'default_delay',
             'mealplan_autoinclude_related', 'mealplan_autoexclude_onhand', 'shopping_recent_days',
             'csv_delim', 'csv_prefix', 'shopping_update_food_lists', 'default_meal_type',

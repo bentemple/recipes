@@ -533,6 +533,7 @@ class UserPreference(models.Model, PermissionModelMixin):
     shopping_share = models.ManyToManyField(User, blank=True, related_name='shopping_share')
     ingredient_decimals = models.IntegerField(default=2)
     comments = models.BooleanField(default=COMMENT_PREF_DEFAULT)
+    always_expand_comments = models.BooleanField(default=True)
     shopping_auto_sync = models.IntegerField(default=5)
     mealplan_autoadd_shopping = models.BooleanField(default=False)
     mealplan_autoexclude_onhand = models.BooleanField(default=True)

@@ -34,6 +34,27 @@ def test_preference_list(u1_s1, u2_s1, u1_s2):
     assert response[0]['user']['id'] == auth.get_user(u1_s1).id
 
 
+@pytest.mark.parametrize('enabled', [False, True])
+def test_always_expand_comments(u1_s1, u2_s1, enabled):
+    user = auth.get_user(u1_s1)
+    url = reverse(DETAIL_URL, args=[user.id])
+    response = u1_s1.get(url)
+    assert response.status_code == 200
+    assert response.json()['always_expand_comments'] is True
+
+    response = u1_s1.patch(url, {'always_expand_comments': enabled}, content_type='application/json')
+    assert response.status_code == 200
+    assert response.json()['always_expand_comments'] is enabled
+    assert u1_s1.get(url).json()['always_expand_comments'] is enabled
+    with scopes_disabled():
+        assert UserPreference.objects.get(user=user).always_expand_comments is enabled
+
+    other_url = reverse(DETAIL_URL, args=[auth.get_user(u2_s1).id])
+    response = u1_s1.patch(other_url, {'always_expand_comments': enabled}, content_type='application/json')
+    assert response.status_code == 404
+    assert u2_s1.get(other_url).json()['always_expand_comments'] is True
+
+
 @pytest.mark.parametrize("arg", [
     ['a_u', 403],
     ['g1_s1', 404],

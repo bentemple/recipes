@@ -48,19 +48,28 @@
                         <template v-if="i.unit && !i.noAmount && i.amount != 0"> {{ ingredientToUnitString(i, ingredientFactor) }}</template>
                     </td>
                     <td>
-                        <template v-if="i.food">
-                            <router-link v-if="i.food.recipe" :to="{name: 'RecipeViewPage', params: {id: i.food.recipe.id}}">
-                                {{ ingredientToFoodString(i, ingredientFactor) }}
-                            </router-link>
-                            <a v-else-if="i.food.url" :href="i.food.url" target="_blank">{{ ingredientToFoodString(i, ingredientFactor) }}</a>
-                            <span v-else>{{ ingredientToFoodString(i, ingredientFactor) }}</span>
+                        <div :class="{'ingredient-details': inlineNotes}">
+                            <div :class="{'ingredient-with-comment': inlineNotes && i.note}">
+                                <span class="ingredient-food">
+                                    <template v-if="i.food">
+                                        <router-link v-if="i.food.recipe" :to="{name: 'RecipeViewPage', params: {id: i.food.recipe.id}}">
+                                            {{ ingredientToFoodString(i, ingredientFactor) }}
+                                        </router-link>
+                                        <a v-else-if="i.food.url" :href="i.food.url" target="_blank">{{ ingredientToFoodString(i, ingredientFactor) }}</a>
+                                        <span v-else>{{ ingredientToFoodString(i, ingredientFactor) }}</span>
 
-                        </template>
+                                    </template>
+                                </span>
+                                <span v-if="inlineNotes && i.note" class="ingredient-comment">
+                                    <i class="far fa-comment mr-1" aria-hidden="true"></i>{{ i.note }}
+                                </span>
+                            </div>
+                        </div>
                     </td>
-                    <td v-if="useUserPreferenceStore().isPrintMode">
+                    <td v-if="useUserPreferenceStore().isPrintMode && !inlineNotes">
                         <span class="text-disabled font-italic"> {{ i.note }}</span>
                     </td>
-                    <td style="width: 1%; text-wrap: nowrap" v-if="!useUserPreferenceStore().isPrintMode">
+                    <td style="width: 1%; text-wrap: nowrap" v-if="!useUserPreferenceStore().isPrintMode && !inlineNotes">
                         <v-icon class="far fa-comment float-right"
                                 v-if="i.note != '' && i.note != undefined"
                                 @click.stop="openNoteIdx = openNoteIdx === idx ? null : idx">
@@ -132,6 +141,7 @@ const props = defineProps({
 const ingredients = defineModel<Ingredient[]>({required: true})
 
 const openNoteIdx = ref<number | null>(null)
+const inlineNotes = computed(() => props.showNotes && useUserPreferenceStore().userSettings.alwaysExpandComments)
 
 const tableHeaders = computed(() => {
     let headers = [
@@ -171,5 +181,39 @@ function addToShopping(ingredient: Ingredient) {
 
 
 <style scoped>
+.ingredient-details {
+    container-type: inline-size;
+    container-name: ingredient;
+}
+
+.ingredient-with-comment {
+    display: grid;
+    gap: 0.25rem 1rem;
+    padding-block: 0.35rem;
+}
+
+.ingredient-with-comment > .ingredient-food,
+.ingredient-comment {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.ingredient-comment {
+    font-size: 0.85em;
+    font-style: italic;
+    opacity: 0.75;
+    white-space: pre-wrap;
+}
+
+@container ingredient (min-width: 24rem) {
+    .ingredient-with-comment {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        align-items: baseline;
+    }
+
+    .ingredient-comment {
+        text-align: right;
+    }
+}
 
 </style>
